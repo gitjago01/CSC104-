@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator</title>
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+input, select, button {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.course {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} 
+    </style>
+
+    <script>
+        function addCourse() {
+    const coursesDiv = document.getElementById('courses');
+    const courseDiv = document.createElement('div');
+    courseDiv.className = 'course';
+
+    const courseNameInput = document.createElement('input');
+    courseNameInput.type = 'text';
+    courseNameInput.placeholder = 'Course Name';
+    courseDiv.appendChild(courseNameInput);
+
+    const creditsInput = document.createElement('input');
+    creditsInput.type = 'number';
+    creditsInput.placeholder = 'Credits';
+    creditsInput.min = 1;
+    courseDiv.appendChild(creditsInput);
+
+    const gradeSelect = document.createElement('select');
+    const grades = {
+        'A': 4.0, 'A-': 3.7, 'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+        'C+': 2.3, 'C': 2.0, 'C-': 1.7, 'D+': 1.3, 'D': 1.0, 'F': 0.0
+    };
+    for (const grade in grades) {
+        const option = document.createElement('option');
+        option.value = grades[grade];
+        option.text = grade;
+        gradeSelect.appendChild(option);
+    }
+    courseDiv.appendChild(gradeSelect);
+
+    coursesDiv.appendChild(courseDiv);
+}
+
+function calculateGPA() {
+    const courses = document.getElementsByClassName('course');
+    let totalCredits = 0;
+    let totalPoints = 0;
+
+    for (let course of courses) {
+        const credits = parseFloat(course.children[1].value);
+        const grade = parseFloat(course.children[2].value);
+
+        if (isNaN(credits) || isNaN(grade)) {
+            alert('Please enter valid credits and grade for all courses.');
+            return;
+        }
+
+        totalCredits += credits;
+        totalPoints += credits * grade;
+    }
+
+    const gpa = totalPoints / totalCredits;
+    const result = document.getElementById('result');
+    result.innerHTML = `Your GPA is ${gpa.toFixed(2)}`;
+}
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>GPA Calculator</h1>
+        <div id="courses">
+            <div class="course">
+                <input type="text" placeholder="Course Name">
+                <input type="number" placeholder="Credits" min="1">
+                <select>
+                    <option value="4">A</option>
+                    <option value="3.7">A-</option>
+                    <option value="3.3">B+</option>
+                    <option value="3">B</option>
+                    <option value="2.7">B-</option>
+                    <option value="2.3">C+</option>
+                    <option value="2">C</option>
+                    <option value="1.7">C-</option>
+                    <option value="1.3">D+</option>
+                    <option value="1">D</option>
+                    <option value="0">F</option>
+                </select>
+            </div>
+        </div>
+        <button onclick="addCourse()">Add Course</button>
+        <button onclick="calculateGPA()">Calculate GPA</button>
+        <h2 id="result"></h2>
+    </div>
+</body>
+</html>
